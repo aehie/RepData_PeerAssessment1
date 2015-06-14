@@ -1,32 +1,24 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r loadproc, echo =TRUE}
+
+```r
 unzip("activity.zip")
 df <- read.csv("activity.csv")
 nint <- length(unique(df$interval))
 df$date <- as.Date(df$date, "%Y-%m-%d")
 df$wkday <- weekdays(df$date)
 file.remove("activity.csv")
-
-
 ```
 
-## What is mean total number of steps taken per day?
-First we compute the total number of steps taken per day:
-
-```{r mday, echo =TRUE}
-sperday <- sapply(split(df$steps, df$date), sum, na.rm = TRUE)
+```
+## [1] TRUE
 ```
 
 ## Imputing missing values
-```{r nahandling, echo =TRUE}
+
+```r
 mint <- vector(mode = "numeric", length = nint)
 
 templist <- mapply(function(x, y) {
