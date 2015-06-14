@@ -75,7 +75,7 @@ plot(mint, main="Daily Activity Pattern", xlab = "5-minute interval",
 
 The interval that has the highest average activity is:
 ```{r maxact, echo =TRUE}
-the interval number", paste(which.max(mint), " with the average number of steps ", max(mint))
+paste("the interval number" ,which.max(mint), " with the average number of steps ", max(mint))
 ```
 
 
