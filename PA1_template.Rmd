@@ -59,6 +59,28 @@ dfcomp <- do.call(rbind, templist)
 rm(templist)
 ```
 
+Now the histogram of the total number of steps taken per day is:
+```{r histmday2, echo =TRUE}
+sperday2 <- sapply(split(dfcomp$steps, dfcomp$date), sum, na.rm = TRUE)
+hist(sperday2, main = "Steps per day", xlab = "", ylab = "Number of days")
+```
+
+
+Average number of steps per day is:
+
+```{r meanday2, echo =TRUE}
+mean(sperday2)
+```
+
+Median number of steps per day is:
+
+```{r medday2, echo =TRUE}
+median(sperday2)
+```
+
+As it can be expected, after we added the missing values, the mean and median number of steps 
+per day has increased.
+
 ## What is the average daily activity pattern?
 
 We convert the vector of mean steps per interval *mint* into a time series:
