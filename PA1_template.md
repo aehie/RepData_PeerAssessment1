@@ -100,5 +100,43 @@ paste("the interval number" ,which.max(mint), " with the average number of steps
 ## [1] "the interval number 104  with the average number of steps  206.169811320755"
 ```
 
+Which corresponds to the time
+
+```r
+unique(df$interval)[which.max(mint)]
+```
+
+```
+## [1] 835
+```
+That is, 8:45 am - 8:50 am is on average the most active interval.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+First, we classify the days as weekdays and weekends and calculate mean steps in each interval:
+
+
+```r
+weekend <- ifelse(dfcomp$wkday %in% c("Saturday", "Sunday"), "weekend", "weekday")
+dlist <- split(dfcomp, weekend)
+dlist <- lapply(dlist, function(x){
+  sapply(split(x$steps, x$interval), mean)
+})
+
+stepweek <- unlist(dlist)
+weekday <- substr(names(stepweek), 1, 7)
+interval <- rep(1:288, 2)
+```
+
+Second, we plot the activity for weekends and weekdays separately:
+
+
+```r
+library(lattice)
+xyplot(stepweek ~interval | weekday, type = "l", layout = c(1, 2), xlab = "Interval number",
+      ylab = "Average number of steps")
+```
+
+![](./PA1_template_files/figure-html/weekplot-1.png) 
+
+According to the plot, the activity during the weekend is distributed more evenly than during the weekday.
