@@ -30,7 +30,7 @@ Here is the histogram of the total number of steps taken per day:
 hist(sperday, main = "Steps per day", xlab = "", ylab = "Number of days")
 ```
 
-![](./PA1_template_files/figure-html/histmday-1.png) 
+![](PA1_template_files/figure-html/histmday-1.png) 
 
 Average number of steps per day is:
 
@@ -54,9 +54,9 @@ median(sperday)
 ## [1] 10395
 ```
 
-## Imputing missing values
+## Average daily activity pattern and imputing missing values
 
-We substitute the missing values for steps my the mean values with the corresponding 5-minutes interval. We also save the mean values for the number of steps per interval into the vector *mint*
+We substitute the missing values for steps my the mean values with the corresponding 5-minutes interval. We also save the mean values for the number of steps per interval into the vector *mint*.
 
 
 ```r
@@ -72,14 +72,54 @@ dfcomp <- do.call(rbind, templist)
 rm(templist)
 ```
 
-Now the histogram of the total number of steps taken per day is:
+First we look at the average daily activity pattern. We convert the vector of mean steps per interval *mint* into a time series:
+
+```r
+mint <- ts(mint)
+```
+
+We plot the daily activity pattern across 5-minutes intervals
+
+
+```r
+plot(mint, main="Daily Activity Pattern", xlab = "5-minute interval",
+     ylab = "Mean number of steps")
+```
+
+![](PA1_template_files/figure-html/mintplot-1.png) 
+
+The interval that has the highest average activity is:
+
+```r
+paste("the interval number" ,which.max(mint), " with the average number of steps ", max(mint))
+```
+
+```
+## [1] "the interval number 104  with the average number of steps  206.169811320755"
+```
+
+Which corresponds to the time
+
+```r
+unique(df$interval)[which.max(mint)]
+```
+
+```
+## [1] 835
+```
+That is, 8:35 am - 8:40 am is on average the most active interval.
+
+
+Now we look how substituting NA's with interval means have changed steps-per-day statistics.
+
+The new histogram of the total number of steps taken per day is:
 
 ```r
 sperday2 <- sapply(split(dfcomp$steps, dfcomp$date), sum, na.rm = TRUE)
 hist(sperday2, main = "Steps per day", xlab = "", ylab = "Number of days")
 ```
 
-![](./PA1_template_files/figure-html/histmday2-1.png) 
+![](PA1_template_files/figure-html/histmday2-1.png) 
 
 
 Average number of steps per day is:
@@ -104,47 +144,7 @@ median(sperday2)
 ## [1] 10766.19
 ```
 
-As it can be expected, after we added the missing values, the mean and median number of steps 
-per day has increased.
-
-## What is the average daily activity pattern?
-
-We convert the vector of mean steps per interval *mint* into a time series:
-
-```r
-mint <- ts(mint)
-```
-
-We plot the daily activity pattern across 5-minutes intervals
-
-
-```r
-plot(mint, main="Daily Activity Pattern", xlab = "5-minute interval",
-     ylab = "Mean number of steps")
-```
-
-![](./PA1_template_files/figure-html/mintplot-1.png) 
-
-The interval that has the highest average activity is:
-
-```r
-paste("the interval number" ,which.max(mint), " with the average number of steps ", max(mint))
-```
-
-```
-## [1] "the interval number 104  with the average number of steps  206.169811320755"
-```
-
-Which corresponds to the time
-
-```r
-unique(df$interval)[which.max(mint)]
-```
-
-```
-## [1] 835
-```
-That is, 8:45 am - 8:50 am is on average the most active interval.
+As it can be expected, after we added the missing values fot time intervals, the mean and median number of steps per day has increased.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -172,6 +172,6 @@ xyplot(stepweek ~interval | weekday, type = "l", layout = c(1, 2), xlab = "Inter
       ylab = "Average number of steps")
 ```
 
-![](./PA1_template_files/figure-html/weekplot-1.png) 
+![](PA1_template_files/figure-html/weekplot-1.png) 
 
-According to the plot, the activity during the weekend is distributed more evenly than during the weekday.
+According to the plot, activity during weekends is distributed more evenly than during weekdays.

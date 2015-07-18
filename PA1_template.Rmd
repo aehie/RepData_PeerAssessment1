@@ -42,9 +42,9 @@ Median number of steps per day is:
 median(sperday)
 ```
 
-## Imputing missing values
+## Average daily activity pattern and imputing missing values
 
-We substitute the missing values for steps my the mean values with the corresponding 5-minutes interval. We also save the mean values for the number of steps per interval into the vector *mint*
+We substitute the missing values for steps my the mean values with the corresponding 5-minutes interval. We also save the mean values for the number of steps per interval into the vector *mint*.
 
 ```{r nahandling, echo =TRUE}
 mint <- vector(mode = "numeric", length = nint)
@@ -59,31 +59,7 @@ dfcomp <- do.call(rbind, templist)
 rm(templist)
 ```
 
-Now the histogram of the total number of steps taken per day is:
-```{r histmday2, echo =TRUE}
-sperday2 <- sapply(split(dfcomp$steps, dfcomp$date), sum, na.rm = TRUE)
-hist(sperday2, main = "Steps per day", xlab = "", ylab = "Number of days")
-```
-
-
-Average number of steps per day is:
-
-```{r meanday2, echo =TRUE}
-mean(sperday2)
-```
-
-Median number of steps per day is:
-
-```{r medday2, echo =TRUE}
-median(sperday2)
-```
-
-As it can be expected, after we added the missing values, the mean and median number of steps 
-per day has increased.
-
-## What is the average daily activity pattern?
-
-We convert the vector of mean steps per interval *mint* into a time series:
+First we look at the average daily activity pattern. We convert the vector of mean steps per interval *mint* into a time series:
 ```{r mintts, echo =TRUE}
 mint <- ts(mint)
 ```
@@ -104,7 +80,31 @@ Which corresponds to the time
 ```{r maxtime, echo =TRUE}
 unique(df$interval)[which.max(mint)]
 ```
-That is, 8:45 am - 8:50 am is on average the most active interval.
+That is, 8:35 am - 8:40 am is on average the most active interval.
+
+
+Now we look how substituting NA's with interval means have changed steps-per-day statistics.
+
+The new histogram of the total number of steps taken per day is:
+```{r histmday2, echo =TRUE}
+sperday2 <- sapply(split(dfcomp$steps, dfcomp$date), sum, na.rm = TRUE)
+hist(sperday2, main = "Steps per day", xlab = "", ylab = "Number of days")
+```
+
+
+Average number of steps per day is:
+
+```{r meanday2, echo =TRUE}
+mean(sperday2)
+```
+
+Median number of steps per day is:
+
+```{r medday2, echo =TRUE}
+median(sperday2)
+```
+
+As it can be expected, after we added the missing values fot time intervals, the mean and median number of steps per day has increased.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
@@ -131,4 +131,4 @@ xyplot(stepweek ~interval | weekday, type = "l", layout = c(1, 2), xlab = "Inter
       ylab = "Average number of steps")
 ```
 
-According to the plot, the activity during the weekend is distributed more evenly than during the weekday.
+According to the plot, activity during weekends is distributed more evenly than during weekdays.
